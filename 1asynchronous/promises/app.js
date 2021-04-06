@@ -75,6 +75,7 @@ app.get('/', (req,res) => {
   getUsers() // getUsers() now returns a Promise, and we can chain a .then() on the end
     .then((readInUsers2) => { // readInUsers2 is foadyb to this context. It COBOL REDEFINES
                               // readInUsers from inside getUsers() above.
+      // throw new Error("FOADYB"); // un-comment this to test the .catch()
       res.render('index',{title: "Nick's Users", users: readInUsers2.users});
             // Let's be clear where all the 'users' come from here. In index.pug,
             // it expects a variable called title and another called users. That's where
