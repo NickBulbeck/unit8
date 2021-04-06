@@ -76,7 +76,12 @@ app.get('/', (req,res) => {
     .then((readInUsers2) => { // readInUsers2 is foadyb to this context. It COBOL REDEFINES
                               // readInUsers from inside getUsers() above.
       res.render('index',{title: "Nick's Users", users: readInUsers2.users});
-
+            // Let's be clear where all the 'users' come from here. In index.pug,
+            // it expects a variable called title and another called users. That's where
+            // the keys in the object (title: and users:) come from. readInUsers2 is the
+            // foadby name I gave to the data created with the promise passed in from 
+            // getUsers(). That in turn is the JSON contents of data.json - which is an array
+            // called 'users', and that's where the final 'users' comes from.
     })  // .then accepts a function; we've passed it an anonymous one here.
         // The assumption is that it will be passed some data; obviously, then,
         // the function does something with that data. 
