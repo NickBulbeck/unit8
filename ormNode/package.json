@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/NickBulbeck/unit8/issues"
   },
-  "homepage": "https://github.com/NickBulbeck/unit8#readme"
+  "homepage": "https://github.com/NickBulbeck/unit8#readme",
+  "dependencies": {
+    "sequelize": "^5.10.1",
+    "sqlite3": "^4.2.0"
+  }
 }
