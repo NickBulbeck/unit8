@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/NickBulbeck/unit8#readme",
   "dependencies": {
-    "sequelize": "^5.10.1",
-    "sqlite3": "^4.2.0"
+    "sequelize": "^6.6.2",
+    "sqlite3": "^5.0.2"
   }
 }
