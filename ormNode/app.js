@@ -1,7 +1,8 @@
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize({
     dialect: 'sqlite',
-    storage: 'movies.db'
+    storage: 'movies.db',
+    logging: true // 'false' disables console logging, obviously
 });
 
 // set up a model; this represents a table in a database.
@@ -35,12 +36,37 @@ const connectToDB = async () => {
         const movie = await Movie.create({ // this creates an instance of the Movie class, which
             title: "The Babadook",         // equates to a record in the table.
             genre: "Feel-good horror"
-        });
+        }); 
         console.log(`Yippeeeee! Tables sync'd with movies.db!`);
         console.log(movie.toJSON()) // the .toJSON formats it more readably
+        await Movie.create({        // You don't need to declare the function as a variable
+          title: "Event Horizon",   // if you don't want to refer to it subsequently (in, 
+          genre: "Feel-bad horror"  // for instance, a console.log()).
+        })
     } catch(error) {
         console.log('Error connecting to movies.db: ', error);
     }
+    demoPromiseAll(); // I'll show you this next...
 }
+
+// A good way of wrapping all your commits in what amounts to a transaction is to use 
+// Promise.all() like this:
+const demoPromiseAll = async () => {
+  try {
+    await Promise.all([ // Promise.all() takes an array of Promises
+      Movie.create({
+        title: "Groundhog Day",
+        genre: "Comedy"
+      }),
+      Movie.create({
+        title: "The Naked Gun",
+        genre: "Comedy"
+      })
+    ])
+  } catch(error) {
+    console.error("Error in Promise.all(): ", error);
+  }
+}
+
 
 connectToDB();
