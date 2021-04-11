@@ -1,27 +1,24 @@
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize({
-    dialect: 'sqlite',
-    storage: 'movies.db',
-    logging: true // 'false' disables console logging, obviously
-});
 
-// set up a model; this represents a table in a database.
-class Movie extends Sequelize.Model {
+// The following code is re-factored into index.js:
+// const sequelize = new Sequelize({
+//     dialect: 'sqlite',
+//     storage: 'movies.db',
+//     logging: true
+// });  ... and replaced therefore by
+const db = require('./db'); // this pulls in ./db/index.js by opinionation
 
-}
-Movie.init({
-    title: Sequelize.STRING,
-    genre: Sequelize.STRING
-},{
-    sequelize: sequelize
-});   
-// .init() is a static method. It creates a table underneath called Movies. Note that 
-// the Model name is always singular, and sequelize creates a plural table name 
-// underneath. Then, .init() creates the table.
-// .init() takes two arguments. The first is a nobject that contains the column names
-// and types. The second is another nobject that sets up what are called the model
-// options. Various things like timestamps can go in here, but you have to have a 
-// sequelize property that you set to equal the variable 'sequelize'. Sigh.
+
+// In the refactor,
+// this code is moved to ./db/models/movie.js
+// class Movie extends Sequelize.Model {}
+// Movie.init({
+//     title: Sequelize.STRING,
+//     genre: Sequelize.STRING
+// },{
+//     sequelize: sequelize
+// });  ... and is therefore replaced by
+const {Movie} = db.models; // {Movie} is an object, referenced below   
 
 
 const connectToDB = async () => {
@@ -30,7 +27,9 @@ const connectToDB = async () => {
 // DROP TABLE IF EXISTS first so that all the tables are refreshed when youy start the app.
 // Clearly, you ONLY want to do this in development or testing!
     // await Movie.sync(); // To save/update one table
-    await sequelize.sync({force:true}); // To update all tables (more future-proof!)
+    await db.sequelize.sync({force:true}); // To update all tables (more future-proof!)
+    // and note that it's db.sequelize, not just sequelize; because sequelize is no longer 
+    // require'd in here after the refactor (it's attached to the db object in ./db/index.js).
     try {
         // await sequelize.authenticate(); // This only needs doing once.
         const movie = await Movie.create({ // this creates an instance of the Movie class, which
