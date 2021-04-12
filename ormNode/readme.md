@@ -1,10 +1,2 @@
-Two folders in ormNode:
- - init
- - crud
-
- The init folder has all of the first two sections in "Using SQL ORM's with NodeJS".
-  - On finishing the second section, the material is mv'd into here
- The crud folder has the material from the third section.
-  - On starting the third section, the material is cp'd into here
-  - Comments are removed
-  - There will be a bit of work involved before we can start this!
+To run any of the versions (1 basic, 2 validations or 3 CRUD), go into the
+requisite folder and copy over the app.js and db/ folders into this main folder.

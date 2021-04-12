@@ -6,12 +6,11 @@ const Sequelize = require('sequelize');
 const sequelize = new Sequelize({
   dialect: 'sqlite',
   storage: 'movies.db',
-  logging: false,
-  define: {
-    // you can add properties in here. (This object CAN be empty.) An example:
-    // timestamps: false
-  }
+  logging: false
 });
+// logging:true is being deprecated soon; at the moment, leaving it out (or setting it
+// to true) logs all the underlying SQL statements to the console. This can be handy 
+// for checking what Sequelize is doing behind the scenes.
 
 const db = {
   sequelize, // adds in our specific database
@@ -20,7 +19,6 @@ const db = {
 };
 // add a Movie object to db.movies:
 db.models.Movie = require('./models/movie.js')(sequelize);
-db.models.Person = require('./models/person.js')(sequelize);
 // ./modles/movie.js exports the Movie class, remember.
 
 module.exports = db
