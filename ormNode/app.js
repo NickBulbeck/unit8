@@ -58,7 +58,90 @@ const connectToDB = async () => {
         isAvailableOnVHS: true
       }
     })
-    console.log(attributeMovies.map(movie => movie.toJSON()));
+    // console.log(attributeMovies.map(movie => movie.toJSON()));
+
+// Operators:  >, <, in, like etc
+// First you need this (generally at the top of the file, of course):
+const {Op} = db.Sequelize;
+// Op is a foadyb variable that contains all the sequelize properties set up 
+// at line 18 of ./db/index.js, which includes all the different operators 
+// (a couple of which we're about to use here)
+  const opMovies = await Movie.findAll({
+    attributes: ['id','title'],
+    where: {
+      releaseDate: {
+        [Op.gte]: '2000-01-01'  // >=
+      },
+      runtime: {
+        [Op.gt]: 90             // >
+      }
+    },
+    order: [['id','DESC'],['releaseDate','ASC']]
+  })
+  // console.log(opMovies.map(movie => movie.toJSON()));
+// There are hunners of others; starts with, ends with, between - check the
+// docs.
+
+// To update a record:
+  const updatedMovie = await Movie.create({
+    title: "The Babadook",
+    releaseDate: '2015-10-10',
+    runtime: 105
+  })
+  // this creates and saves the babadook
+  const checkUpdated = await Movie.findOne({
+    where: {
+      title: "The Babadook"
+    }
+  })
+  // console.log(checkUpdated.toJSON());
+  // method 1:
+  checkUpdated.runtime = 106;
+  await checkUpdated.save();
+  // console.log(checkUpdated.get({plain:true})); // need to refresh the variable
+  // method 2:
+  await checkUpdated.update({
+    title: 'Something random and inappropriate',
+    isAvailableOnVHS: true
+  },
+  {
+    fields: ['isAvailableOnVHS'] // Only these fields can be updated
+  })
+  // console.log(checkUpdated.get({plain:true})); // need to refresh the variable again
+  // The fields attribute is useful for white-listing fields that can be 
+  // updated so that, for instance, if a form sneaks through an update that 
+  // you don't want, you can prevent it. In this instance, the title isn't
+  // updated.
+
+// Deleting a record
+// 'delete' is a reserved word in JavaScript, so Sequelize uses 'destroy' instead. 
+//  if you add the 'paranoid' property to the table's options object, and set it to true:
+//    etc
+//    isAvailableOnVHS: true
+//  },{
+//    sequelize: sequelize,
+//    paranoid: true
+//  }
+// ... then .destroy() will logically delete it, but not physically remove it.
+// It won't be returned in any SELECT queries, but it will still be in the database
+// with a deletedAt value set.
+
+
+
+  const toyStory = await Movie.findOne({
+    where: {
+      title: 'Toy Story 3'
+    }
+  });
+  // console.log(toyStory.toJSON());
+  await toyStory.destroy();
+  const check = await Movie.findOne({
+    where: {
+      title: 'Toy Story 3'
+    }
+  });
+  // console.log(check); // can't .toJSON() as it should be null
+
 //----------------------------------------------------------------------------
   } catch(error) {
     if (error.name === 'SequelizeValidationError') {
@@ -69,7 +152,5 @@ const connectToDB = async () => {
     }
   }
 }
-
-
 
 connectToDB();
